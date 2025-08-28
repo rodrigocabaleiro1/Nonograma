@@ -4,14 +4,23 @@ import java.util.Random;
 
 public class Nonograma {
 	private boolean [][] tablero;
-	private int [] celdasNegrasPorFila;
-	private int [] celdasNegrasPorColumna;
+	private int [][] pistasColumnas;
+	private int [][] pistasFilas;
 	
 	public Nonograma() {
 		this.tablero = new boolean [5][5];
-		this.celdasNegrasPorColumna = new int [5];
-		this.celdasNegrasPorFila = new int [5];
+		this.pistasColumnas = new int [2][5];
+		this.pistasColumnas = new int [5][2];
 		distribuirCeldas();
+		generarPistas();
+	}
+	
+	public Nonograma (int tamano) {
+		this.tablero = new boolean [tamano][tamano];
+		this.pistasColumnas = new int [2][tamano];
+		this.pistasColumnas = new int [tamano][2];
+		distribuirCeldas();
+		generarPistas();
 	}
 	
 	private int tamano() {
@@ -19,11 +28,10 @@ public class Nonograma {
 	}
 	
 	private void distribuirCeldas() {
-		pintarTableroCompleto();
-		generarFilas();
+		pintarTablero();
 	}
 	
-	private void pintarTableroCompleto() { //pinta el tablero de celdas negras
+	private void pintarTablero() {
 		for(int f= 0; f< tamano(); f++) {
 			for(int c= 0; c< tamano(); c++) {
 				pintarCelda(f,c);
@@ -31,60 +39,90 @@ public class Nonograma {
 		}
 	}
 	
-	private void generarFilas() {
-		
-		int celdasNegrasFila;
-		int celdasVaciasFila;
-		int primeraSecuencia; //cantidad de celdas vacias que tendra la primera secuencia en la fila
-		int columnaInicialVacias;
-		
+	private void generarPistas() {
+		boolean filasCorrectas = false;
+		boolean columnasCorrectas = false;
+		while(!columnasCorrectas || !filasCorrectas) {
+			filasCorrectas = analizarFilas();
+			columnasCorrectas = analizarColumnas();
+		if (!filasCorrectas || columnasCorrectas) {
+			pintarTablero();
+		}
+		}
+	}
+	
+	private boolean analizarColumnas() {
+		boolean todoCorrecto = true;
+		for(int c= 0; c< tamano(); c++) {
+			todoCorrecto &= columnaCorrecta(c);
+		}
+		return todoCorrecto;
+	}
+	private boolean columnaCorrecta(int columna) {
+		int cantidadPistas = 0; //cantidad de pistas en la columna actual
+		boolean columnaCorrecta = true;
+
+		int secuencia = 0; //cantidad de celdas negras seguidas
 		for(int f= 0; f< tamano(); f++) {
-			celdasNegrasFila = numeroAleatorio(3) + 2; 	// generamos un numero entre 0 y 2 y le sumamos 2
-        													// para que respete el rango de celdas negras maximo
-			celdasVaciasFila = tamano() - celdasNegrasFila;
-			
-			columnaInicialVacias = numeroAleatorio(tamano());
-			if (celdasVaciasFila == 1) {
-				
-				despintarCelda(f, columnaInicialVacias);
-			} else {
-				int columnaActual = columnaInicialVacias;
-				primeraSecuencia = celdasVaciasFila - numeroAleatorio(celdasVaciasFila-1);
-				celdasVaciasFila -= primeraSecuencia; //aqui guardamos la extencionde la segunda secuencia
-				//solo deben haber dos secuencias
-				
-				boolean incrementoColumna = definirSentido(columnaActual + 1, primeraSecuencia);
-					//+1 es para que el valor de la columnaActual este entre 1 y 5
-					//definimos sentido en el que recorremos por columnas
-				
-				//primera secuencia
-				for(int i = primeraSecuencia; i>0; i--) {
-					despintarCelda(f, columnaActual);
-					columnaActual = desplazarseColumna(incrementoColumna, columnaActual);
+			if(cantidadPistas >= 2) {
+				columnaCorrecta = false;
+			}
+			else {
+				if(tablero[f][columna]) {
+					secuencia ++;
+				}else if(secuencia > 0 && !tablero[f][columna]) {
+					pistasColumnas[cantidadPistas][columna] = secuencia;
+					cantidadPistas ++;
 				}
-				//segunda secuencia
-				columnaActual = numeroAleatorio(tamano());
-				incrementoColumna = definirSentido(columnaActual + 1, primeraSecuencia);
-				for(int i = celdasVaciasFila; i>0; i--) {
-					despintarCelda(f, columnaActual);
-					columnaActual = desplazarseColumna(incrementoColumna, columnaActual);
-				}
-			
-        
 			}
 		}
+		if (cantidadPistas == 0) {
+			columnaCorrecta = false;
+		}
+		return columnaCorrecta;
 	}
-	
-	
 
-	private boolean definirSentido(int columnaActual, int secuencia) { //True = --> // False = <---
-		if((tamano() - columnaActual) < secuencia) { 
-			return false; //
+	private boolean analizarFilas() {
+		boolean todoCorrecto = true;
+		for(int f= 0; f< tamano(); f++) {
+			todoCorrecto &= filaCorrecta(f);
 		}
-		else {
-			return true;
-		}
+		return todoCorrecto;
 	}
+
+	private boolean filaCorrecta(int fila) {
+		int cantidadPistas = 0; //cantidad de pistas en la columna actual
+		boolean filaCorrecta = true;
+
+		int secuencia = 0; //cantidad de celdas negras seguidas
+		for(int c= 0; c< tamano(); c++) {
+			if(cantidadPistas >= 2) {
+				filaCorrecta = false;
+			}
+			else {
+				if(tablero[fila][c]) {
+					secuencia ++;
+				}else if(secuencia > 0 && !tablero[fila][c]) {
+					pistasColumnas[fila][cantidadPistas] = secuencia;
+					cantidadPistas ++;
+				}
+			}
+		}
+		if (cantidadPistas == 0) {
+			filaCorrecta = false;
+		}
+		return filaCorrecta;
+	}
+
+	private boolean valorAleatorio() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+	
+	private void pintarCelda(int fila, int columna){
+		this.tablero[fila][columna] = valorAleatorio();
+	}	
+	
 
 	@Override
 	public String toString() {
@@ -104,24 +142,4 @@ public class Nonograma {
 		return mensaje.toString();
 	}
 	
-	private int numeroAleatorio(int numero) {
-		Random random = new Random();
-		return random.nextInt(numero);
-	}
-	
-	private void pintarCelda(int fila, int columna){
-		this.tablero[fila][columna] = true;
-	}
-	
-	private void despintarCelda(int fila, int columna){ //Equivalente a que haya una X en el tablero
-		this.tablero[fila][columna] = false;
-	}
-	private int desplazarseColumna(boolean incremento, int columnaActual) {
-		if(incremento) {
-			columnaActual++;
-		}else {
-			columnaActual--;
-		}
-		return columnaActual;
-	}
 }
