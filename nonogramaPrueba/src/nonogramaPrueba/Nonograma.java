@@ -10,7 +10,7 @@ public class Nonograma {
 	public Nonograma() {
 		this.tablero = new boolean [5][5];
 		this.pistasColumnas = new int [2][5];
-		this.pistasColumnas = new int [5][2];
+		this.pistasFilas = new int [5][2];
 		distribuirCeldas();
 		generarPistas();
 	}
@@ -18,7 +18,7 @@ public class Nonograma {
 	public Nonograma (int tamano) {
 		this.tablero = new boolean [tamano][tamano];
 		this.pistasColumnas = new int [2][tamano];
-		this.pistasColumnas = new int [tamano][2];
+		this.pistasFilas = new int [tamano][2];
 		distribuirCeldas();
 		generarPistas();
 	}
@@ -73,6 +73,7 @@ public class Nonograma {
 				}else if(secuencia > 0 && !tablero[f][columna]) {
 					pistasColumnas[cantidadPistas][columna] = secuencia;
 					cantidadPistas ++;
+					secuencia = 0;
 				}
 			}
 		}
@@ -103,8 +104,9 @@ public class Nonograma {
 				if(tablero[fila][c]) {
 					secuencia ++;
 				}else if(secuencia > 0 && !tablero[fila][c]) {
-					pistasColumnas[fila][cantidadPistas] = secuencia;
+					pistasFilas[fila][cantidadPistas] = secuencia;
 					cantidadPistas ++;
+					secuencia = 0;
 				}
 			}
 		}
