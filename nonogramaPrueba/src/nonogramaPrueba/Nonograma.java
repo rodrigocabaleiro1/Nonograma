@@ -45,7 +45,7 @@ public class Nonograma {
 		while(!columnasCorrectas || !filasCorrectas) {
 			filasCorrectas = analizarFilas();
 			columnasCorrectas = analizarColumnas();
-		if (!filasCorrectas || columnasCorrectas) {
+		if (!filasCorrectas || !columnasCorrectas) {
 			pintarTablero();
 		}
 		}
