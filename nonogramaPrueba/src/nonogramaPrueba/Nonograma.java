@@ -1,5 +1,6 @@
 package nonogramaPrueba;
 
+import java.awt.Point;
 import java.util.Random;
 
 public class Nonograma {
@@ -32,8 +33,19 @@ public class Nonograma {
 		return pistasFilas;
 	}
 	
-	public boolean obtenerValorCelda(int fila, int columna) {
-		return tablero[fila][columna];
+	public Point revelarCeldaNegra() {
+		Random random = new Random();
+		boolean celdaEncontrada = false;
+		Point punto = new Point();
+		
+		while(!celdaEncontrada) {
+			punto.x = random.nextInt(tamano());	//fila
+			punto.y = random.nextInt(tamano());	//columna
+			if(tablero[punto.x][punto.y]) {
+				celdaEncontrada = true;
+			}
+		}
+		return punto;
 	}
 	//------------------------------------------------------------
 	// METODOS PRIVADOS

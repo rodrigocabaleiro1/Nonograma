@@ -18,7 +18,7 @@ public class main {
 			mensaje.append("]\n");
 		}
 		System.out.print(mensaje.toString());
-
+		System.out.print(nono.revelarCeldaNegra());
 	}
 
 }
