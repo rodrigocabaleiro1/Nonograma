@@ -6,7 +6,7 @@ public class main {
 		System.out.println("tablero");
 		Nonograma nono = new Nonograma();
 		System.out.print(nono);
-		int [][] pistas = nono.pistasColumnas();
+		int [][] pistas = nono.pistasFilas();
 		StringBuilder mensaje = new StringBuilder();
 		for(int f= 0; f< pistas.length; f++) {
 			mensaje.append("[ ");

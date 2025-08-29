@@ -29,7 +29,7 @@ public class Nonograma {
 	
 	/* retorna una matriz que contiene las pistas para todas las filas del tablero*/
 	public int [][]pistasFilas() {
-		return pistasColumnas;
+		return pistasFilas;
 	}
 	
 	public boolean obtenerValorCelda(int fila, int columna) {
@@ -62,16 +62,16 @@ public class Nonograma {
 			columnasCorrectas = analizarColumnas();
 		if (!filasCorrectas || !columnasCorrectas) {
 			pintarTablero();
-			//reiniciarPistas();
+			reiniciarPistas();
 		}
 		
 		}
 	}
 	
-	/*private void reiniciarPistas() {
+	private void reiniciarPistas() {
 		pistasColumnas = new int [2][tamano()];
 		pistasFilas = new int [tamano()][2];	
-	}*/
+	}
 
 	private boolean analizarColumnas() {
 		boolean todoCorrecto = true;
@@ -92,8 +92,11 @@ public class Nonograma {
 			else {
 				if(tablero[f][columna]) {
 					secuencia ++;
+					if(secuenciaInvalida(secuencia)) {
+						columnaCorrecta = false;
+					}
 					
-				}if(finSecuencia(columna, secuencia, f) || finalizaEnCeldaNegra(columna, f)) {
+				}if(finSecuencia(columna, secuencia, f) || columnaFinalizaEnCeldaNegra(columna, f)) {
 					pistasColumnas[cantidadPistas][columna] = secuencia;
 					cantidadPistas ++;
 					secuencia = 0;
@@ -106,8 +109,15 @@ public class Nonograma {
 		return columnaCorrecta;
 	}
 
-	private boolean finalizaEnCeldaNegra(int columna, int fila) {
+	private boolean secuenciaInvalida(int secuencia) {
+		return secuencia >= tamano();
+	}
+
+	private boolean columnaFinalizaEnCeldaNegra(int columna, int fila) {
 		return tablero[fila][columna] && fila== tamano()-1;
+	}
+	private boolean filaFinalizaEnCeldaNegra(int columna, int fila) {
+		return tablero[fila][columna] && columna == tamano()-1;
 	}
 
 	private boolean finSecuencia(int columna, int secuencia, int fila) {
@@ -134,7 +144,10 @@ public class Nonograma {
 			else {
 				if(tablero[fila][c]) {
 					secuencia ++;
-				}else if(finSecuencia(c, secuencia, fila)) {
+					if(secuenciaInvalida(secuencia)) {
+						filaCorrecta = false;
+					}
+				}if(finSecuencia(c, secuencia, fila) || filaFinalizaEnCeldaNegra(c, fila)) {
 					pistasFilas[fila][cantidadPistas] = secuencia;
 					cantidadPistas ++;
 					secuencia = 0;
