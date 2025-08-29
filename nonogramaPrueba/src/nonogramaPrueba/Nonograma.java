@@ -23,6 +23,21 @@ public class Nonograma {
 		generarPistas();
 	}
 	
+	public int [][]pistasColumnas() {
+		return pistasColumnas;
+	}
+	
+	/* retorna una matriz que contiene las pistas para todas las filas del tablero*/
+	public int [][]pistasFilas() {
+		return pistasColumnas;
+	}
+	
+	public boolean obtenerValorCelda(int fila, int columna) {
+		return tablero[fila][columna];
+	}
+	//------------------------------------------------------------
+	// METODOS PRIVADOS
+	//-------------------------------------------------------------
 	private int tamano() {
 		return this.tablero.length;
 	}
@@ -47,10 +62,17 @@ public class Nonograma {
 			columnasCorrectas = analizarColumnas();
 		if (!filasCorrectas || !columnasCorrectas) {
 			pintarTablero();
+			//reiniciarPistas();
 		}
+		
 		}
 	}
 	
+	/*private void reiniciarPistas() {
+		pistasColumnas = new int [2][tamano()];
+		pistasFilas = new int [tamano()][2];	
+	}*/
+
 	private boolean analizarColumnas() {
 		boolean todoCorrecto = true;
 		for(int c= 0; c< tamano(); c++) {
@@ -70,7 +92,8 @@ public class Nonograma {
 			else {
 				if(tablero[f][columna]) {
 					secuencia ++;
-				}else if(secuencia > 0 && !tablero[f][columna]) {
+					
+				}if(finSecuencia(columna, secuencia, f) || finalizaEnCeldaNegra(columna, f)) {
 					pistasColumnas[cantidadPistas][columna] = secuencia;
 					cantidadPistas ++;
 					secuencia = 0;
@@ -81,6 +104,14 @@ public class Nonograma {
 			columnaCorrecta = false;
 		}
 		return columnaCorrecta;
+	}
+
+	private boolean finalizaEnCeldaNegra(int columna, int fila) {
+		return tablero[fila][columna] && fila== tamano()-1;
+	}
+
+	private boolean finSecuencia(int columna, int secuencia, int fila) {
+		return secuencia > 0 && !tablero[fila][columna];
 	}
 
 	private boolean analizarFilas() {
@@ -103,7 +134,7 @@ public class Nonograma {
 			else {
 				if(tablero[fila][c]) {
 					secuencia ++;
-				}else if(secuencia > 0 && !tablero[fila][c]) {
+				}else if(finSecuencia(c, secuencia, fila)) {
 					pistasFilas[fila][cantidadPistas] = secuencia;
 					cantidadPistas ++;
 					secuencia = 0;
