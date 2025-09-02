@@ -1,6 +1,7 @@
 package nonogramaPrueba;
 
 import java.awt.EventQueue;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ public class Pantalla extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private int tamano;
 	JButton[][] botones;
+	String[][] valorBotones;
 	JLabel [][] pistasFilas;
 	JLabel [][] pistasColumnas;
 	private CardLayout cardLayout;
@@ -205,13 +207,14 @@ public class Pantalla extends JFrame {
 	private void llenarTablero(JPanel tablero) {
 		//definir celdas-----------------
 				botones = new JButton[tamano][tamano];
+				valorBotones = new String[tamano][tamano];
 				
 				//Crear Botones
 				for (int fila = 0; fila < tamano; fila++) {
 		            for (int columna = 0; columna < tamano; columna++) {
 		            	JButton boton = new JButton();
 		            	definirColorDeFondo(boton, Color.white); // color inicial
-		            	definirFuncionalidadCeldas(boton);
+		            	definirFuncionalidadCeldas(boton, fila, columna);
 		            	botones[fila][columna] = boton;
 		                tablero.add(boton);
 		            }
@@ -219,10 +222,11 @@ public class Pantalla extends JFrame {
 		
 	}
 
-	private void definirFuncionalidadCeldas(JButton boton) {
+	private void definirFuncionalidadCeldas(JButton boton, int fila, int columna) {
 		// Agregar acción: cambiar color al hacer click
         boton.addActionListener(new ActionListener() {
             private int estado = 0;
+            private Point ubicacion = new Point(fila, columna);
             
 
             @Override
@@ -230,15 +234,19 @@ public class Pantalla extends JFrame {
             	estado++; // alterna el estado
                 if (estado >= 3) {
                 	estado = 0;
+                	valorBotones[ubicacion.x][ubicacion.y] = "";
                 }
                 
                 if (estado == 1) {
                 	definirColorDeFondo(boton, Color.black);
+                	valorBotones[ubicacion.x][ubicacion.y] = "NEGRO";
+                	
                 } else {
                 	definirColorDeFondo(boton, Color.white);
                 }
                 if(estado == 2) {
                 	mostrarX(boton);
+                	valorBotones[ubicacion.x][ubicacion.y] = "X";
                 } else {
                 	ocultarX(boton);
                 }

@@ -58,9 +58,11 @@ public class interzasVisual extends JFrame {
 	
 	//Diseño del menu
 	private JPanel crearMenuPanel() {
+		
     	//creo la pantalla
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout()); // Centrar elementos
+        
         //ajusto posiciones
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(15, 15, 15, 15);
