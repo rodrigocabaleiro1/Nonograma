@@ -24,6 +24,10 @@ public class Nonograma {
 		generarPistas();
 	}
 	
+	public int tamano() {
+		return this.tablero.length;
+	}
+	
 	public int [][]pistasColumnas() {
 		return pistasColumnas;
 	}
@@ -50,9 +54,6 @@ public class Nonograma {
 	//------------------------------------------------------------
 	// METODOS PRIVADOS
 	//-------------------------------------------------------------
-	private int tamano() {
-		return this.tablero.length;
-	}
 	
 	private void distribuirCeldas() {
 		pintarTablero();
