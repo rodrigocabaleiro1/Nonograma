@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -61,20 +62,14 @@ public class Pantalla extends JFrame {
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 480, 480);
+		setBounds(100, 100, 480, 500);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		setTitle("Trabajo Practico N°1 : NONOGRAMA");
 		
 		getContentPane().setLayout(new BorderLayout());;
-		//Usa CarLayout para cambiar entre pantallas
 		panelPrincipal = new JPanel();
-		
 		panelPrincipal.setLayout(new BorderLayout(0, 0));
 		menuPrincipal();
-		
-		//panelPrincipal.add(menuPrincipal, "menu");
-		//panelPrincipal.add(juego, "juego");
-		//juego(panelPrincipal);
 		agregarElementosPanel(getContentPane(), panelPrincipal, BorderLayout.CENTER);
 	}
 
@@ -140,7 +135,8 @@ public class Pantalla extends JFrame {
 		JPanel contenedorPistasArriba = new JPanel();
 		JPanel margenIzquierdoPistasArriba = new JPanel();
 		
-		modificarAlturaPanel(header, 20);
+		//Dimensiones de los paneles
+		//modificarAlturaPanel(header, 30);
 		modificarAlturaPanel(foother, 15);
 		modificarAnchoPanel(margenIzquierdo, 10);
 		modificarAnchoPanel(margenDerecho, 10);
@@ -148,13 +144,16 @@ public class Pantalla extends JFrame {
 		modificarAnchoPanel(pistasIzquierda, 16);
 		modificarAnchoPanel(margenIzquierdoPistasArriba, 16);
 		
+		//Manejo de Layouts
 		body.setLayout(new BorderLayout(0, 0)); // Establecer BorderLayout al body
 		contenedorPistasArriba.setLayout(new BorderLayout(0, 0)); //Establecer BorderLayout para organizar pistas arriba		
 		tablero.setLayout(new GridLayout(tamano, tamano, 0, 0));	// Definir layout del tablero como una grilla	
 		pistasArriba.setLayout(new GridLayout(2, tamano, 0, 16));
 		pistasIzquierda.setLayout(new GridLayout(tamano, 2, 16, 0));		
+		header.setLayout(new BorderLayout(0,20));
 		
-	
+		header.setBorder(BorderFactory.createEmptyBorder(20, 16, 10, 20)); // márgenes externos
+		
 		
 		
 		//Organizar paneles
@@ -177,10 +176,24 @@ public class Pantalla extends JFrame {
 		definirColorDeFondo(tablero, Color.LIGHT_GRAY);
 		definirColorDeFondo(margenIzquierdo, Color.DARK_GRAY);
 		definirColorDeFondo(margenDerecho, Color.DARK_GRAY);
+		definirColorDeFondo(margenIzquierdoPistasArriba, Color.LIGHT_GRAY);
 		
+		//Funcionalidades
 		llenarTablero(tablero);
 		crearPistas(pistasArriba, pistasIzquierda);
+		evaluarJugada(header);
 	}
+
+
+	private void evaluarJugada(JPanel contenedor) {
+		//Terminar partida
+		JButton evaluar = new JButton("Evaluar resultado");
+		agregarElementosPanel(contenedor, evaluar, BorderLayout.EAST);
+		definirColorDeFondo(evaluar, Color.CYAN);
+		evaluar.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+	}
+	
+	
 	//provisorio
 	private void crearPistas(JPanel arriba, JPanel izquierda) {
 		pistasFilas = new JLabel[2][tamano];
@@ -286,6 +299,9 @@ public class Pantalla extends JFrame {
 	}
 	
 	private void agregarElementosPanel(Container container, JPanel elemento, String layout) {
+		container.add(elemento, layout);
+	}
+	private void agregarElementosPanel(Container container, JButton elemento, String layout) {
 		container.add(elemento, layout);
 	}
 }
