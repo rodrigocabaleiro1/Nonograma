@@ -23,6 +23,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+
 import java.awt.Color;
 import java.awt.Container;
 
@@ -178,10 +180,18 @@ public class Pantalla extends JFrame {
 		definirColorDeFondo(margenDerecho, Color.DARK_GRAY);
 		definirColorDeFondo(margenIzquierdoPistasArriba, Color.LIGHT_GRAY);
 		
+		//Agregar Bordes
+		body.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		tablero.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		
+		
 		//Funcionalidades
 		llenarTablero(tablero);
 		crearPistas(pistasArriba, pistasIzquierda);
 		evaluarJugada(header);
+		ayuda(header);
+		
+		
 	}
 
 
@@ -189,11 +199,75 @@ public class Pantalla extends JFrame {
 		//Terminar partida
 		JButton evaluar = new JButton("Evaluar resultado");
 		agregarElementosPanel(contenedor, evaluar, BorderLayout.EAST);
-		definirColorDeFondo(evaluar, Color.CYAN);
-		evaluar.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		definirColorDeFondo(evaluar, Color.WHITE);
+		
+		evaluar.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
+		evaluar.setMargin(new Insets(10,10,10,10));
 	}
 	
+	private void ayuda(JPanel contenedor) {
+		//Terminar partida
+		JButton ayuda = new JButton(" ? ");
+		agregarElementosPanel(contenedor, ayuda, BorderLayout.WEST);
+		definirColorDeFondo(ayuda, Color.CYAN);
+		ayuda.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		ayuda.addActionListener(e -> mostrarAyuda());
+	}
 	
+	private void mostrarAyuda() {
+        JFrame nueva = new JFrame("Reglas del Juego");
+        nueva.setSize(480, 640);
+        nueva.setLocationRelativeTo(null);
+
+        // 👇 importante: que solo cierre esta ventana, no la principal
+        nueva.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        agregarElementosPanel(nueva, panel, BorderLayout.CENTER);
+        reglas(panel);
+        
+        nueva.setVisible(true);
+        
+    }
+	
+	private void reglas(JPanel panel) {
+		JLabel contenedor = new JLabel();
+		
+		// PAra que el texto tenga formato agregue codigo HTML, un JLabel puede interpretarlo
+		String texto = "<html>\r\n"
+				+ "<div style= 'width:290px'>\r\n"
+				+ "	<div style='font-size:18;margin-bottom: 5px;' >\r\n"
+				+ "		Introduccion\r\n"
+				+ "	</div>\r\n"
+				+ "	<div style = 'font-size:12;margin-bottom: 10px;'>\r\n"
+				+ "		El nonograma es un tipo de rompecabezas originario de Japón, que se juega sobre una\r\n"
+				+ "		cuadrícula en blanco y negro. Es un juego de ingenio con reglas simples y soluciones desafiantes. Cada casilla de la cuadrícula puede estar pintada de negro o marcada con una X\r\n"
+				+ "		(celda vacía). Las pistas numéricas, ubicadas a la izquierda de cada fila y sobre cada columna,\r\n"
+				+ "		indican las longitudes y el orden de las secuencias de celdas negras que deben aparecer en esa\r\n"
+				+ "		fila o columna.\r\n"
+				+ "	</div>\r\n"
+				+ "	<div style='font-size:18; margin-bottom: 10px;'>\r\n"
+				+ "		Reglas:\r\n"
+				+ "	</div>\r\n"
+				+ "	<div style='font-size:12;'>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>– Se tiene una grilla de casillas de igual largo y ancho, que deben ser pintadas de negro o marcadas con\r\n"
+				+ "		una X.</div>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>– En las pistas, cada número indica una cadena de celdas negras consecutivas.</div> \r\n"
+				+ "		<div style='margin-bottom: 5px;'>– Entre dos cadenas de celdas negras debe existir al menos una celda libre.</div>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>– Al costado de cada fila en la grilla, aparecen los largos de las cadenas de casillas en\r\n"
+				+ "		negro para esa fila.</div>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>– Sobre cada columna en la grilla, aparecen los largos de las cadenas de casillas en negro\r\n"
+				+ "		para esa columna.</div>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>– El objetivo es encontrar y marcar todas las casillas negras.</div>\r\n"
+				+ "		<div style='margin-bottom: 5px;'>- El juego no puede finalizar si hay al menos una celda blanca en la grilla.</div>	\r\n"
+				+ "	</div>\r\n"
+				+ "<div>\r\n"
+				+ "</html>";
+		contenedor.setText(texto);
+		agregarElementosPanel(panel, contenedor);
+	}
+
+
 	//provisorio
 	private void crearPistas(JPanel arriba, JPanel izquierda) {
 		pistasFilas = new JLabel[2][tamano];
@@ -303,5 +377,8 @@ public class Pantalla extends JFrame {
 	}
 	private void agregarElementosPanel(Container container, JButton elemento, String layout) {
 		container.add(elemento, layout);
+	}
+	private void agregarElementosPanel(Container container, JLabel elemento) {
+		container.add(elemento);
 	}
 }
