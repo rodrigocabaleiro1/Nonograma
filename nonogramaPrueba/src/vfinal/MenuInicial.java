@@ -14,9 +14,10 @@ import javax.swing.border.EmptyBorder;
 
 
 public class MenuInicial extends Pantalla{
-	public MenuInicial() {
+	Controlador controlador;
+	public MenuInicial(Controlador controlador) {
 		super("Nonograma - Seleccionar dificultad", 200, 200, 640, 480);
-        
+        this.controlador = controlador;
         
         JPanel contenedor = new JPanel();
         
@@ -63,8 +64,7 @@ public class MenuInicial extends Pantalla{
 
     private void iniciarJuego(int size) {
 
-        Controlador controlador = new Controlador(size);
-        controlador.mostrarJuego();
+        controlador.iniciarJuego(size);
         dispose(); // cerrar menú inicial
     }
     

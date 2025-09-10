@@ -1,14 +1,16 @@
 package vfinal;
 
+import java.awt.Point;
+
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Controlador {
     private Nonograma juego;
     private VistaNonograma vista;
 
-    public Controlador(int tamano) {
-        this.juego = new Nonograma(tamano);
-        this.vista = new VistaNonograma(tamano, juego.pistasFilas(), juego.pistasColumnas());
+    public Controlador() {
+        mostrarMenuInicio();
     }
 
 
@@ -36,8 +38,18 @@ public class Controlador {
     public void mostrarSolucion() {
         vista.mostrarSolucion(juego.obtenerSolucion());
     }
-    public void mostrarJuego() {
+    public void iniciarJuego(int tamano) {
+    	this.juego = new Nonograma(tamano);
+        this.vista = new VistaNonograma(tamano, juego.pistasFilas(), juego.pistasColumnas());
     	vista.setControlador(this);
         vista.setVisible(true);
+    }
+    
+    public void revelarCeldaNegra() {
+    	Point coordenadas = juego.revelarCeldaNegra();
+    	vista.actualizarCelda(coordenadas.x, coordenadas.y, "NEGRO");
+    }
+    public void mostrarMenuInicio() {
+    	SwingUtilities.invokeLater(() -> new MenuInicial(this).setVisible(true));
     }
 }

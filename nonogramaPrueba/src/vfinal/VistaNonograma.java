@@ -8,15 +8,16 @@ import java.awt.event.ActionListener;
 public class VistaNonograma extends Pantalla {
     private JButton[][] botones;
     private String[][] valorBotones;
-    private JButton btnEvaluar, btnReset, btnSolucion, ayuda;
+    private JButton btnEvaluar, btnReset, btnSolucion, ayuda, revelarCelda, volverAlMenu;
     private JLabel[][] pistasFilas;
     private JLabel[][] pistasColumnas;
     private Controlador controlador;
     private int tamano;
-    //private Nonograma juego;
+    private int usosRevelarCelda;
 
     public VistaNonograma(int tamano, int [][] pistasFilas, int [][]pistasColumnas) {
     	super("Nonograma " + tamano + "x" + tamano, 100, 50, 1024, 768);
+    	usosRevelarCelda = 0;
     	this.tamano = tamano;
         setLayout(new BorderLayout());
 
@@ -53,6 +54,8 @@ public class VistaNonograma extends Pantalla {
         agregarElementosPanel(abajo, btnReset);
         agregarElementosPanel(abajo, btnSolucion);
         ayuda(abajo);
+        revelarCelda(abajo);
+        volverAlMenu(abajo);
         agregarElementosPanel(getContentPane(), abajo, BorderLayout.SOUTH);
 
         // Eventos botones
@@ -67,7 +70,7 @@ public class VistaNonograma extends Pantalla {
         });
     }
 
-    // Setear controlador
+	// Setear controlador
     public void setControlador(Controlador c) {
         this.controlador = c;
     }
@@ -129,7 +132,7 @@ public class VistaNonograma extends Pantalla {
     private void llenarPistasColumnas(JPanel arriba, int [][] pistasArriba) {
     	for (int i = 0; i < tamano/2; i++) {
 			for(int j = 0; j< tamano; j++) {
-				pistasColumnas[j][i] = new JLabel("" + pistasArriba[i][j]);
+				pistasColumnas[j][i] = new JLabel(analizarPista (pistasArriba[i][j]));
 				agregarElementosPanel(arriba,pistasColumnas[j][i]);         
 			}
 		}
@@ -138,10 +141,16 @@ public class VistaNonograma extends Pantalla {
     private void llenarPistasFilas(JPanel izquierda, int [][] pistasIzquierda) {
     	for (int i = 0; i < tamano; i++) {
 			for(int j = 0; j< tamano/2; j++) {
-				pistasFilas[j][i] = new JLabel(" " + pistasIzquierda[i][j]);	
+				pistasFilas[j][i] = new JLabel(" " + analizarPista(pistasIzquierda[i][j]));	
 				agregarElementosPanel(izquierda, pistasFilas[j][i]);          
 			}
 		}
+    }
+    private String analizarPista(int pista) {// si la pista es cero devuelve un caracter vacio
+    	if (pista == 0) {
+    		return " ";
+    	}
+    	return ""+pista;
     }
     
     private void llenarTablero(JPanel tablero) {
@@ -189,10 +198,8 @@ public class VistaNonograma extends Pantalla {
     }
     
     private void ayuda(JPanel contenedor) {
-		//Terminar partida
 		ayuda = new JButton(" ? ");
 		agregarElementosPanel(contenedor, ayuda);
-		ayuda.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		ayuda.addActionListener(e -> mostrarAyuda());
 	}
 	
@@ -248,8 +255,30 @@ public class VistaNonograma extends Pantalla {
 		contenedor.setText(texto);
 		agregarElementosPanel(panel, contenedor);
 	}
+	
+	private void volverAlMenu(JPanel contenedor) {
+		volverAlMenu = new JButton("Menu Principal");
+		agregarElementosPanel(contenedor, volverAlMenu);
+		volverAlMenu.addActionListener(e -> abrirMenu());	
+	}
+	private void abrirMenu() {
+		controlador.mostrarMenuInicio();
+		dispose(); // cerrar ventana
+	}
+	private void revelarCelda(JPanel contenedor) {
+		revelarCelda = new JButton("Pista");
+		agregarElementosPanel(contenedor, revelarCelda);
+		revelarCelda.addActionListener(e -> mostrarCeldaCorrecta());	
+	}
     
-    private void quitarTexto(JButton boton) {
+    private void mostrarCeldaCorrecta() {
+		if (usosRevelarCelda == 0) {
+			controlador.revelarCeldaNegra();
+		}
+    	usosRevelarCelda++;
+	}
+
+	private void quitarTexto(JButton boton) {
 		boton.setText("");
 		
 	}
