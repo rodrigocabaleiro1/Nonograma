@@ -93,7 +93,7 @@ public class Pantalla extends JFrame {
        //boton de empezar a jugar 
         JButton jugar = new JButton("Empezar Juego (5x5)");
         jugar.setFont(new Font("Arial", Font.PLAIN, 20));
-        definirFuncionalidadJugar(jugar, 5, panelPrincipal);
+        definirFuncionalidadJugar(jugar, 20, panelPrincipal);
         
         //agrego el titulo del meni
         contenedor.gridx = 0;

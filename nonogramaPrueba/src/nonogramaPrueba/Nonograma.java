@@ -7,19 +7,20 @@ public class Nonograma {
 	private boolean [][] tablero;
 	private int [][] pistasColumnas;
 	private int [][] pistasFilas;
+	private Random random;
 	
 	public Nonograma() {
+		random =  new Random();
 		this.tablero = new boolean [5][5];
-		this.pistasColumnas = new int [2][5];
-		this.pistasFilas = new int [5][2];
+		reiniciarPistas();
 		distribuirCeldas();
 		generarPistas();
 	}
 	
 	public Nonograma (int tamano) {
+		random =  new Random();
 		this.tablero = new boolean [tamano][tamano];
-		this.pistasColumnas = new int [2][tamano];
-		this.pistasFilas = new int [tamano][2];
+		reiniciarPistas();
 		distribuirCeldas();
 		generarPistas();
 	}
@@ -38,7 +39,6 @@ public class Nonograma {
 	}
 	
 	public Point revelarCeldaNegra() {
-		Random random = new Random();
 		boolean celdaEncontrada = false;
 		Point punto = new Point();
 		
@@ -51,6 +51,8 @@ public class Nonograma {
 		}
 		return punto;
 	}
+	
+	public 
 	//------------------------------------------------------------
 	// METODOS PRIVADOS
 	//-------------------------------------------------------------
@@ -74,7 +76,7 @@ public class Nonograma {
 			filasCorrectas = analizarFilas();
 			columnasCorrectas = analizarColumnas();
 		if (!filasCorrectas || !columnasCorrectas) {
-			pintarTablero();
+			pintarTablero(); //O(2)
 			reiniciarPistas();
 		}
 		
@@ -82,8 +84,8 @@ public class Nonograma {
 	}
 	
 	private void reiniciarPistas() {
-		pistasColumnas = new int [2][tamano()];
-		pistasFilas = new int [tamano()][2];	
+		pistasColumnas = new int [tamano()/2][tamano()];
+		pistasFilas = new int [tamano()][tamano()/2];	
 	}
 
 	private boolean analizarColumnas() {
@@ -99,7 +101,7 @@ public class Nonograma {
 
 		int secuencia = 0; //cantidad de celdas negras seguidas
 		for(int f= 0; f< tamano(); f++) {
-			if(cantidadPistas >= 2) {
+			if(cantidadPistas >= tamano()/2) {
 				columnaCorrecta = false;
 			}
 			else {
@@ -151,7 +153,7 @@ public class Nonograma {
 
 		int secuencia = 0; //cantidad de celdas negras seguidas
 		for(int c= 0; c< tamano(); c++) {
-			if(cantidadPistas >= 2) {
+			if(cantidadPistas >= tamano()/2) {
 				filaCorrecta = false;
 			}
 			else {
@@ -174,7 +176,6 @@ public class Nonograma {
 	}
 
 	private boolean valorAleatorio() {
-		Random random = new Random();
 		return random.nextBoolean();
 	}
 	

@@ -1,10 +1,13 @@
-package nonogramaPrueba;
+package vfinal;
 
-public class main {
+import javax.swing.SwingUtilities;
+
+public class Main {
 
 	public static void main(String[] args) {
+		
 		System.out.println("tablero");
-		Nonograma nono = new Nonograma(15);
+		Nonograma nono = new Nonograma(5);
 		System.out.print(nono);
 		int [][] pistas = nono.pistasFilas();
 		StringBuilder mensaje = new StringBuilder();
@@ -19,6 +22,10 @@ public class main {
 		}
 		System.out.print(mensaje.toString());
 		System.out.print(nono.revelarCeldaNegra());
+		nono.imprimirJuegoActual();
+		
+		SwingUtilities.invokeLater(() -> new MenuInicial().setVisible(true));
 	}
 
-}
+	}
+
