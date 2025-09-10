@@ -77,9 +77,7 @@ import java.util.Random;
 	    public Boolean evaluar() {
 	    	for (int i = 0; i < tamano(); i++) {
 		        for (int j = 0; j < tamano(); j++) {
-		        	System.out.print("vuelta");
 		            if (usuario[i][j] == null) {
-		            	System.out.println("vacia");
 		            	return null;}
 		        }
 	    	}
@@ -238,22 +236,4 @@ import java.util.Random;
 				mensaje.append("]\n");
 			}
 			return mensaje.toString();
-		}
-//Pruebas-----------------------------------------		
-		public void imprimirJuegoActual() {
-		StringBuilder mensaje = new StringBuilder();
-		for(int f= 0; f< tamano(); f++) {
-			mensaje.append("[ ");
-			for(int c= 0; c< tamano(); c++) {
-				
-				mensaje.append("");
-				if(usuario[f][c] == null) {
-					mensaje.append("N ");}
-				else if (usuario[f][c]) { mensaje.append("O ");}
-				else {
-					mensaje.append("X ");}
-			}
-			mensaje.append("]\n");
-		}
-		System.out.print(mensaje);
-	}}
+		}}

@@ -21,31 +21,43 @@ public class VistaNonograma extends Pantalla {
     	this.tamano = tamano;
         setLayout(new BorderLayout());
 
-        // Título
+        //Crear Paneles y el titulo
         JLabel titulo = new JLabel("Nonograma " + tamano + "x" + tamano, SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 20));
-        add(titulo, BorderLayout.NORTH);
-
-        // Panel central
         JPanel centro = new JPanel(new BorderLayout());
-        add(centro, BorderLayout.CENTER);
-        
-        
         JPanel panelPistasColumnas = new JPanel(new GridLayout(tamano/2, tamano));
         JPanel panelPistasFilas = new JPanel(new GridLayout(tamano, tamano/2));
-        generarPistas(panelPistasColumnas, panelPistasFilas, pistasColumnas, pistasFilas);
-        centro.add(panelPistasColumnas, BorderLayout.NORTH);
-        panelPistasColumnas.setBorder(BorderFactory.createEmptyBorder(0,10*(tamano/2),0,0)); //10px de margen izquierdo por 
-        																					//cantidad de secuencias maximas de celdas
-        centro.add(panelPistasFilas, BorderLayout.WEST);
-        
-        // Grilla de botones
         JPanel tablero = new JPanel(new GridLayout(tamano, tamano));
-        llenarTablero(tablero);
-        centro.add(tablero, BorderLayout.CENTER);
-
-        // Panel de botones abajo
         JPanel abajo = new JPanel();
+        
+        
+        establecerEstilos(titulo, panelPistasColumnas);
+        organizarPaneles(titulo, centro, panelPistasColumnas, panelPistasFilas, tablero, abajo);
+        generarPistas(panelPistasColumnas, panelPistasFilas, pistasColumnas, pistasFilas);
+        llenarTablero(tablero);
+        organizarBotonesAbajo(abajo);
+    }
+    
+  //---------------------------------------------------------------------
+    //Organizar Elementos
+  //---------------------------------------------------------------------
+
+    private void organizarPaneles(JLabel titulo, JPanel centro, JPanel panelPistasColumnas, JPanel panelPistasFilas,
+			JPanel tablero, JPanel abajo) {
+		agregarElementosPanel(getContentPane(), titulo, BorderLayout.NORTH);
+        agregarElementosPanel(getContentPane(), centro, BorderLayout.CENTER);
+        agregarElementosPanel(centro, panelPistasColumnas, BorderLayout.NORTH);
+        agregarElementosPanel(centro, panelPistasFilas, BorderLayout.WEST);
+        agregarElementosPanel(getContentPane(), abajo, BorderLayout.SOUTH);
+        agregarElementosPanel(centro, tablero, BorderLayout.CENTER);
+	}
+    
+    private void establecerEstilos(JLabel titulo, JPanel panelPistasColumnas) {
+		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+        panelPistasColumnas.setBorder(BorderFactory.createEmptyBorder(0,10*(tamano/2),0,0)); //10px de margen izquierdo por cantidad de secuencias maximas de celdas
+	}
+    
+	private void organizarBotonesAbajo(JPanel abajo) {
+		// Panel de botones abajo
         btnEvaluar = new JButton("Evaluar");
         btnReset = new JButton("Reset");
         btnSolucion = new JButton("Mostrar Solución");
@@ -56,25 +68,30 @@ public class VistaNonograma extends Pantalla {
         ayuda(abajo);
         revelarCelda(abajo);
         volverAlMenu(abajo);
-        agregarElementosPanel(getContentPane(), abajo, BorderLayout.SOUTH);
+        eventosEvaluarResetSolucion();
+	}
+private void eventosEvaluarResetSolucion() {
+	// Eventos botones
+	btnEvaluar.addActionListener(e -> {
+	    if (controlador != null) controlador.evaluar();
+	});
+	btnReset.addActionListener(e -> {
+	    if (controlador != null) controlador.reset();
+	});
+	btnSolucion.addActionListener(e -> {
+	    if (controlador != null) controlador.mostrarSolucion();
+	});
+}
 
-        // Eventos botones
-        btnEvaluar.addActionListener(e -> {
-            if (controlador != null) controlador.evaluar();
-        });
-        btnReset.addActionListener(e -> {
-            if (controlador != null) controlador.reset();
-        });
-        btnSolucion.addActionListener(e -> {
-            if (controlador != null) controlador.mostrarSolucion();
-        });
-    }
-
-	// Setear controlador
+    
     public void setControlador(Controlador c) {
         this.controlador = c;
     }
 
+    //-------------------------------------------------------
+    //	Manejo de celdas en pantalla
+    //-------------------------------------------------------
+    
     //Actualizar celda
     public void actualizarCelda(int fila, int col, String estado) {
         JButton boton = botones[fila][col];
@@ -120,7 +137,10 @@ public class VistaNonograma extends Pantalla {
         }
     }
 
-  
+
+    //-------------------------------------------------------
+    //	elementos relacionados a la generacion del tablero de juego
+    //-------------------------------------------------------  
     private void generarPistas(JPanel arriba, JPanel izquierda, int [][] pistasArriba, int [][]pistasIzquierda) {
 		pistasFilas = new JLabel[tamano/2][tamano];
 		pistasColumnas = new JLabel [tamano][tamano/2];
@@ -171,6 +191,10 @@ public class VistaNonograma extends Pantalla {
 				}
 		
 	}
+    //---------------------------------------------------------------
+    //	Funcionalidad Botones
+    //---------------------------------------------------------------
+    
     private void definirFuncionalidadCeldas(JButton boton, int fila, int columna) {
 		// Agregar acción: cambiar color al hacer click
         boton.addActionListener(new ActionListener() {
@@ -223,7 +247,57 @@ public class VistaNonograma extends Pantalla {
 		JLabel contenedor = new JLabel();
 		
 		// PAra que el texto tenga formato agregue codigo HTML, un JLabel puede interpretarlo
-		String texto = "<html>\r\n"
+		String texto = textoAyuda();
+		contenedor.setText(texto);
+		agregarElementosPanel(panel, contenedor);
+	}
+	
+	private void volverAlMenu(JPanel contenedor) {
+		volverAlMenu = new JButton("Menu Principal");
+		agregarElementosPanel(contenedor, volverAlMenu);
+		volverAlMenu.addActionListener(e -> abrirMenu());	
+	}
+	private void abrirMenu() {
+		controlador.mostrarMenuInicio();
+		dispose(); // cerrar ventana
+	}
+	private void revelarCelda(JPanel contenedor) {
+		revelarCelda = new JButton("Pista");
+		agregarElementosPanel(contenedor, revelarCelda);
+		revelarCelda.addActionListener(e -> mostrarCeldaCorrecta());	
+	}
+    
+    private void mostrarCeldaCorrecta() {
+		if (usosRevelarCelda == 0) {
+			controlador.revelarCeldaNegra();
+		}
+    	usosRevelarCelda++;
+	}
+
+
+    //-------------------------------------------------------
+    //	Control estetica Botones
+    //-------------------------------------------------------
+	private void quitarTexto(JButton boton) {
+		boton.setText("");
+		
+	}
+	private void mostrarX(JButton boton) {
+		boton.setText("X");
+		boton.setForeground(Color.RED); //pinto el texto de rojo
+		definirColorDeFondo(boton, Color.WHITE);
+	}
+	private void marcarDeNegro(JButton boton) {
+		definirColorDeFondo(boton, Color.BLACK);
+		quitarTexto(boton);
+	}
+	private void vaciarBoton(JButton boton) {
+		quitarTexto(boton);
+		definirColorDeFondo(boton, Color.WHITE);
+	}
+	
+	private String textoAyuda() {
+		return "<html>\r\n"
 				+ "<div style= 'width:290px'>\r\n"
 				+ "	<div style='font-size:18;margin-bottom: 5px;' >\r\n"
 				+ "		Introduccion\r\n"
@@ -252,47 +326,5 @@ public class VistaNonograma extends Pantalla {
 				+ "	</div>\r\n"
 				+ "<div>\r\n"
 				+ "</html>";
-		contenedor.setText(texto);
-		agregarElementosPanel(panel, contenedor);
-	}
-	
-	private void volverAlMenu(JPanel contenedor) {
-		volverAlMenu = new JButton("Menu Principal");
-		agregarElementosPanel(contenedor, volverAlMenu);
-		volverAlMenu.addActionListener(e -> abrirMenu());	
-	}
-	private void abrirMenu() {
-		controlador.mostrarMenuInicio();
-		dispose(); // cerrar ventana
-	}
-	private void revelarCelda(JPanel contenedor) {
-		revelarCelda = new JButton("Pista");
-		agregarElementosPanel(contenedor, revelarCelda);
-		revelarCelda.addActionListener(e -> mostrarCeldaCorrecta());	
-	}
-    
-    private void mostrarCeldaCorrecta() {
-		if (usosRevelarCelda == 0) {
-			controlador.revelarCeldaNegra();
-		}
-    	usosRevelarCelda++;
-	}
-
-	private void quitarTexto(JButton boton) {
-		boton.setText("");
-		
-	}
-	private void mostrarX(JButton boton) {
-		boton.setText("X");
-		boton.setForeground(Color.RED); //pinto el texto de rojo
-		definirColorDeFondo(boton, Color.WHITE);
-	}
-	private void marcarDeNegro(JButton boton) {
-		definirColorDeFondo(boton, Color.BLACK);
-		quitarTexto(boton);
-	}
-	private void vaciarBoton(JButton boton) {
-		quitarTexto(boton);
-		definirColorDeFondo(boton, Color.WHITE);
 	}
 }

@@ -42,6 +42,9 @@ public abstract class Pantalla extends JFrame{
 	protected void agregarElementosPanel(Container container, JPanel elemento, String layout) {
 		container.add(elemento, layout);
 	}
+	protected void agregarElementosPanel(Container container, JLabel elemento, String layout) {
+		container.add(elemento, layout);
+	}
 	protected void agregarElementosPanel(Container container, JButton elemento, String layout) {
 		container.add(elemento, layout);
 	}
