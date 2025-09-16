@@ -53,7 +53,7 @@ public class VistaNonograma extends Pantalla {
     
     private void establecerEstilos(JLabel titulo, JPanel panelPistasColumnas) {
 		titulo.setFont(new Font("Arial", Font.BOLD, 20));
-        panelPistasColumnas.setBorder(BorderFactory.createEmptyBorder(0,10*(tamano/2),0,0)); //10px de margen izquierdo por cantidad de secuencias maximas de celdas
+		establecerBorde(panelPistasColumnas, 0, 10*(tamano/2), 0, 0);//10px de margen izquierdo por cantidad de secuencias maximas de celdas
 	}
     
 	private void organizarBotonesAbajo(JPanel abajo) {
@@ -166,6 +166,7 @@ private void eventosEvaluarResetSolucion() {
 			}
 		}
     }
+    
     private String analizarPista(int pista) {// si la pista es cero devuelve un caracter vacio
     	if (pista == 0) {
     		return " ";
@@ -189,7 +190,6 @@ private void eventosEvaluarResetSolucion() {
 		            	agregarElementosPanel(tablero, boton);
 		            }
 				}
-		
 	}
     //---------------------------------------------------------------
     //	Funcionalidad Botones
@@ -215,8 +215,7 @@ private void eventosEvaluarResetSolucion() {
                 }	
                 else if(estado == 2) {
                 	controlador.celdaClick(ubicacion.x, ubicacion.y, "X");
-        	}
-      
+                }
             }
         });
     }
@@ -238,9 +237,7 @@ private void eventosEvaluarResetSolucion() {
         JPanel panel = new JPanel();
         agregarElementosPanel(nueva, panel, BorderLayout.CENTER);
         reglas(panel);
-        
-        nueva.setVisible(true);
-        
+        nueva.setVisible(true);     
     }
 	
 	private void reglas(JPanel panel) {

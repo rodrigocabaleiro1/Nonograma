@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public abstract class Pantalla extends JFrame{
 	
@@ -53,5 +55,15 @@ public abstract class Pantalla extends JFrame{
 	}
 	protected void agregarElementosPanel(Container container, JButton elemento) {
 		container.add(elemento);
+	}
+	protected void pintarTexto(JLabel texto, Color color) {
+		texto.setForeground(color);
+	}
+	protected void establecerGrilla(JPanel contenedor, int filas, int columnas) {
+		contenedor.setLayout(new GridLayout(filas, columnas));
+	}
+
+	protected void establecerBorde(JPanel contenedor, int x, int y, int ancho, int alto) {
+		contenedor.setBorder(new EmptyBorder(x, y, ancho, alto));
 	}
 }

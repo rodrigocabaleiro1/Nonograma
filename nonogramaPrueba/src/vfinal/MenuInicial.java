@@ -18,14 +18,12 @@ public class MenuInicial extends Pantalla{
 	
 	public MenuInicial(Controlador controlador) {
 		super("Nonograma - Seleccionar dificultad", 200, 200, 640, 480);
-        this.controlador = controlador;
-        
-        JPanel contenedor = new JPanel();
-        
+        this.controlador = controlador;        
+        JPanel contenedor = new JPanel();    
         JLabel titulo = new JLabel("SELECCIONAR DIFICULTAD", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
-        titulo.setForeground(Color.white);
-        add(titulo);
+        pintarTexto(titulo, Color.white);
+        agregarElementosPanel(getContentPane(), titulo);
         
         //	Iniciar Botones
         JButton btn5x5 = new JButton("5 x 5");
@@ -68,12 +66,12 @@ public class MenuInicial extends Pantalla{
 	}
 
 	private void estilosContenedor(JPanel contenedor) {
-		contenedor.setLayout(new GridLayout(0, 1)); // n filas, 1 columna   
-        contenedor.setBorder(new EmptyBorder(20, 20, 20, 20)); //margenes
+		establecerBorde(contenedor, 20, 20 , 20 , 20);
+		establecerGrilla(contenedor, 0 , 1);  
         definirColorDeFondo(contenedor, Color.DARK_GRAY);
 	}
 
-    private void iniciarJuego(int size) {
+	private void iniciarJuego(int size) {
 
         controlador.iniciarJuego(size);
         dispose(); // cerrar menú inicial
